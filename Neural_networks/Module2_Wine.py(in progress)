@@ -43,3 +43,32 @@ class WineNet(torch.nn.Module):
     return x
   
 wine_net = WineNet(5)
+loss = torch.nn.CrossEntropyLoss()
+
+optimizer = torch.optim.Adam(wine_net.parametrs(),
+                             lr=0.01)
+
+
+batch_size = 10
+
+for epoch in range(10000):
+    order = np.random.permutation(len(X_train))
+    for start_index in range(0, len(X_train), batch_size):
+        optimizer.zero_grad()
+
+        batch_indexes = oreder[start_index:start_index+batch_size]
+
+        x_batch = X_train[batch_indexes]
+        y_batch = y_train[batch_indexes]
+
+        preds = wine_net.forward(x_batch)
+
+        loss_val = loss(preds, y_batch)
+        loss_val.backward()
+
+        optimizer.step()
+
+    if epoch % 100 == 0:
+        test_preds = wine_net.forward(X_test)
+        test_preds = test_preds.argmax(dim=1)
+        print((test_preds == y_test).float().mean())
