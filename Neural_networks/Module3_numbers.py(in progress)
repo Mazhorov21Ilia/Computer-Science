@@ -1,0 +1,27 @@
+import torch
+import random
+import numpy as np
+random.seed(0)
+np.random.seed(0)
+torch.manual_seed(0)
+torch.cuda.manual_seed(0)
+torch.backends.cudnn.deterministic = True
+import torchvision.datasets
+M_train = torchvision.datasets.MNIST('./', download=True, train=True)
+M_test = torchvision.datasets.MNIST('./', download=True, train=False)
+X_train = M_train.train_data
+y_train = M_train.train_labels
+x_test = M_test.test_data
+y_test = M_test.test_labels
+X_train.dtype, y_train.dtype
+X_train = X_train.float()
+x_test = x_test.float()
+X_train.shape, x_test.shape
+y_train.shape, y_test.shape
+X_train = X_train.reshape([-1, 28 * 28])
+X_test = x_test.reshape([-1, 28 * 28])
+class MNet(torch.nn.Module):
+    def __init__(self, n_hidden_neurons):
+      super(MNet, self).__init__()
+      self.fc1 = torch.nn.Linear(28*28, n_hidden_neurons)
+      self.ac1 = torch.nn.Sigmoid()
