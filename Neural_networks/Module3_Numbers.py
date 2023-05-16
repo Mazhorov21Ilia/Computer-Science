@@ -53,15 +53,13 @@ loss = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mnist_net.parameters(), lr=0.001)
 
 
-batch_size = 70
-
+batch_size = 50
+accuracy = []
 
 for epoch in range(10000):
     order = np.random.permutation(len(X_train))
     
     for start_index in range(0, len(X_train), batch_size):
-        optimizer.zero_grad()
-        
         batch_indexes = order[start_index:start_index+batch_size]
         
         X_batch = X_train[batch_indexes]
@@ -73,6 +71,8 @@ for epoch in range(10000):
         loss_value.backward()
         
         optimizer.step()
+        optimizer.zero_grad()
     test_preds = mnist_net.forward(X_test)
-    accuracy = (test_preds.argmax(dim=1) == y_test).float().mean()
-    print (accuracy)
+    accuracy.append((test_preds.argmax(dim=1) == y_test).float().mean())
+    
+plt.plot(accuracy)
