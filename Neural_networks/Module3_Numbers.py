@@ -1,7 +1,10 @@
 import torch
-import random
 import numpy as np
-
+import random
+import matplotlib.pyplot as plt
+import torchvision.datasets
+MNIST_train = torchvision.datasets.MNIST('./', download=True, train=True)
+MNIST_test = torchvision.datasets.MNIST('./', download=True, train=False)
 
 random.seed(0)
 np.random.seed(0)
@@ -25,8 +28,9 @@ X_train = X_train.float()
 X_test = X_test.float()
 
 
-X_train.shape, X_test.shape
-y_train.shape, y_test.shape
+# plt.imshow(X_train[54765])
+# plt.show()
+# print(y_train[54765])
 
 
 X_train = X_train.reshape([-1, 28 * 28])
@@ -45,7 +49,8 @@ class MNet(torch.nn.Module):
         x = self.ac1(x)
         x = self.fc2(x)
         return x
-    
+
+
 mnist_net = MNet(100)
 
 
