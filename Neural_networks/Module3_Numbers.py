@@ -1,17 +1,9 @@
 import torch
 import numpy as np
-import random
 import matplotlib.pyplot as plt
 import torchvision.datasets
 MNIST_train = torchvision.datasets.MNIST('./', download=True, train=True)
 MNIST_test = torchvision.datasets.MNIST('./', download=True, train=False)
-
-random.seed(0)
-np.random.seed(0)
-torch.manual_seed(0)
-torch.cuda.manual_seed(0)
-torch.backends.cudnn.deterministic = True
-
 
 import torchvision.datasets
 MNIST_train = torchvision.datasets.MNIST('./', download=True, train=True)
@@ -59,7 +51,8 @@ optimizer = torch.optim.Adam(mnist_net.parameters(), lr=0.001)
 
 
 batch_size = 50
-accuracy = []
+test_accuracy_history = []
+test_loss_history = []
 
 for epoch in range(10000):
     order = np.random.permutation(len(X_train))
@@ -78,6 +71,12 @@ for epoch in range(10000):
         optimizer.step()
         optimizer.zero_grad()
     test_preds = mnist_net.forward(X_test)
-    accuracy.append((test_preds.argmax(dim=1) == y_test).float().mean())
+    test_loss_history.append(loss(test_preds, y_test).float().mean())
     
-plt.plot(accuracy)
+    accuracy = (test_preds.argmax(dim=1) == y_test).float().mean()
+    test_accuracy_history.append(accuracy)
+    
+    
+#plt.plot(test_accuracy_history)
+test_loss_history = torch.Tensor(test_loss_history)
+plt.plot(test_loss_history)
