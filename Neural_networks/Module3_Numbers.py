@@ -5,10 +5,6 @@ import torchvision.datasets
 MNIST_train = torchvision.datasets.MNIST('./', download=True, train=True)
 MNIST_test = torchvision.datasets.MNIST('./', download=True, train=False)
 
-import torchvision.datasets
-MNIST_train = torchvision.datasets.MNIST('./', download=True, train=True)
-MNIST_test = torchvision.datasets.MNIST('./', download=True, train=False)
-
 
 X_train = MNIST_train.train_data
 y_train = MNIST_train.train_labels
