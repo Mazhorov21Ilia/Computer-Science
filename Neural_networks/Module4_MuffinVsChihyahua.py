@@ -78,3 +78,62 @@ test_loader = torch.utils.data.DataLoader(
     test_ds_chihvsmaff, shuffle=True, 
     batch_size=batch_size, num_workers=1, drop_last=False
 )
+
+
+
+
+class ConvNet(nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.act = nn.LeakyReLU(0.2)
+    self.maxpool = nn.MaxPool2d(2,2)
+    self.conv0 = nn.Conv2d(3, 32, 3, stride=1, padding=0)
+    self.conv1 = nn.Conv2d(32, 32, 3, stride=1, padding=0)
+    self.conv2 = nn.Conv2d(32, 64, 3, stride=1, padding=0)
+    self.conv3 = nn.Conv2d(64, 64, 3, stride=1, padding=0)
+    self.conv4 = nn.Conv2d(64, 64, 3, stride=1, padding=0)
+
+    self.addaptivepool = nn.AdaptiveAvgPool2d((1,1))
+    self.flatten = nn.Flatten()
+    self.linear1 = nn.Linear(64, 10)
+    self.linear2 = nn.Linear(10, 2)
+
+  def forward(self, x):
+    x = self.conv0(x)
+    x = self.act(x)
+    x = self.maxpool(x)
+    x = self.conv1(x)
+    x = self.act(x)
+    x = self.maxpool(x)
+    x = self.conv2(x)
+    x = self.act(x)
+    x = self.maxpool(x)
+    x = self.conv3(x)
+    x = self.act(x)
+    x = self.addaptivepool(x)
+    x = self.flatten(x)
+    x = self.linear1(x)
+    x = self.act(x)
+    x = self.linear2(x)
+
+    return x
+
+
+
+
+model = ConvNet()
+
+
+#optimizer
+
+
+loss_fn = nn.CrossEntropyLoss()
+optimizer = nn.optim.Adam(model.parametrs(), lr = 0.001, betas=(0.9, 0.999))
+
+
+#metrics
+
+
+def accuracy(pred, label):
+  answer = F.softmax(pred.detach()).numpy().argmax(1) == label.numpy().argmax(1)
+  return answer.mean()
