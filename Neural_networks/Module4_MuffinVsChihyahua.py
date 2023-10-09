@@ -129,7 +129,7 @@ model = ConvNet()
 
 
 loss_fn = nn.CrossEntropyLoss()
-optimizer = nn.optim.Adam(model.parametrs(), lr = 0.001, betas=(0.9, 0.999))
+optimizer = torch.optim.Adam(model.parametrs(), lr = 0.001, betas=(0.9, 0.999))
 
 
 #metrics
