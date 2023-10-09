@@ -27,7 +27,7 @@ class Dataset2class(torch.utils.data.Dataset):
 
   def __getitem__(self, idx):
 
-    if idx <= len(self.dir1_list):
+    if idx < len(self.dir1_list):
       class_id = 0
       img_path = os.path.join(self.path_dir1, self.dir1_list[idx])
     else:
@@ -119,7 +119,8 @@ class ConvNet(nn.Module):
     return x
 
 
-
+def count_parametrs(model):
+  return sum(p.numel() for p in model.parametrs() if p.requires_grad)
 
 model = ConvNet()
 
@@ -137,3 +138,27 @@ optimizer = nn.optim.Adam(model.parametrs(), lr = 0.001, betas=(0.9, 0.999))
 def accuracy(pred, label):
   answer = F.softmax(pred.detach()).numpy().argmax(1) == label.numpy().argmax(1)
   return answer.mean()
+
+
+
+for epoch in range(100):
+  loss_val = 0
+  acc_val = 0
+  for sample in (pbar := tqdm(train_loader)):
+    img, label = sample['img'], sample['lable']
+    optimizer.zero_grad()
+
+    label = F.one_hot(label, 2).float()
+    pred = model(img)
+
+    loss = loss_fn(pred, label)
+
+    loss.backward()
+    loss_item = loss.item()
+    loss_val += loss_item
+
+    optimizer.step()
+
+    acc_current = accuracy(pred, label)
+    acc_val += acc_current
+  
