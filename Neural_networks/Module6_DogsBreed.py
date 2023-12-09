@@ -60,7 +60,7 @@ class DogBreedClassifierInference:
 
 dog_detector = DogDetector()
 inference_model = DogBreedClassifierInference()
-image_path = "/content/sample_data/husky.jpg"
+image_path = "/content/sample_data/image.jpg"
 if dog_detector.is_dog(image_path):
   print(inference_model.classify_dog_breed(image_path))
   plt.imshow(Image.open(image_path))
