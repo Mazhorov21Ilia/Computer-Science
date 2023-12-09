@@ -4,6 +4,7 @@ from PIL import Image
 import urllib
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.transforms import functional as F
+import matplotlib.pyplot as plt
 
 class DogDetector:
     def __init__(self):
@@ -59,8 +60,9 @@ class DogBreedClassifierInference:
 
 dog_detector = DogDetector()
 inference_model = DogBreedClassifierInference()
-image_path = "/content/sample_data/image.jpg"
+image_path = "/content/sample_data/husky.jpg"
 if dog_detector.is_dog(image_path):
   print(inference_model.classify_dog_breed(image_path))
+  plt.imshow(Image.open(image_path))
 else:
   print("Собака не найдена")
